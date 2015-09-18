@@ -4,26 +4,6 @@
  * transaction/
  **/
 
-
-/*
-this.vPosition = this.gl.getAttribLocation( this.program, "vPosition" );
-    this.gl.vertexAttribPointer( this.vPosition, 3, this.gl.FLOAT, false, 11 * 4, 0 * 4 );
-    this.gl.enableVertexAttribArray( this.vPosition );
-
-*/
-
-
-/*
-gl.vertexAttribPointer(
-    location,
-    numComponents,
-    typeOfData,
-    normalizeFlag,
-    strideToNextPieceOfData,
-    offsetIntoBuffer);
-   */
-
-
 var WHAttributePointer = function(name,location,count,type,normalize,stride,offset, bytes){
     this.name = name;
     this.location = location;
@@ -35,7 +15,9 @@ var WHAttributePointer = function(name,location,count,type,normalize,stride,offs
     this.bytes = bytes;
 };
 
-
+/**
+ * Attributes should be order by there location/index inside the buffer
+ **/
 function WHAttributePointerCompare(a,b) {
   if (a.location < b.location)
     return -1;
@@ -65,8 +47,9 @@ function WHAttributePointerCompare(a,b) {
     var attribs = this.program.propertyList.attributes;
     var gl = this.program.gl();
 
-
     var bytes = 0;
+
+    // transform the WHShaderProperties to WHAttributePointers
     for (var idx = 0; idx != attribs.length; idx ++) {
         var att = attribs[idx];
         this.attributePointers.push(
@@ -74,8 +57,9 @@ function WHAttributePointerCompare(a,b) {
                 att.name,
                 gl.getAttribLocation( this.program.program, att.name ),
                 att.numComponents,
-                att.dataType, // need to fix for dynamic types
+                att.dataType,
                 false,
+                // calculate stride and offset in next iteration/based on ordering
                 0,
                 0,
                 att.bytes
@@ -84,8 +68,10 @@ function WHAttributePointerCompare(a,b) {
         bytes += att.bytes;
     }
 
+    // order the attributes (layout in the buffer)
     this.attributePointers.sort(WHAttributePointerCompare);
 
+    // update position/offset in the buffer
     var offset = 0;
     for (var idx = 0; idx != this.attributePointers.length; idx ++) {
         this.attributePointers[idx].stride = bytes;
