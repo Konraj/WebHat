@@ -10,7 +10,9 @@
     <script type="text/javascript" src="../js/edangel/initShaders2.js"></script>
     <script type="text/javascript" src="../js/edangel/MV.js"></script>
 
+    <script src="../js/webhat/datatypes/webgl-types.js"></script>
     <script src="../js/webhat/wh-shader-properties.js"></script>
+    <script src="../js/webhat/buffers/wh-dynamic-attribute-buffer.js"></script>
     <script src="../js/webhat/providers/shaders/wh-shader-provider.js"></script>
     <script src="../js/webhat/wh-camera-model.js"></script>
     <script src="../js/webhat/wh-gl-program.js"></script>
@@ -43,6 +45,18 @@
                 });
                 $('#tbl_att').append(trHTML);
 
+                $("#tbl_att_ptr").find("tr:gt(0)").remove();
+                var trHTML = '';
+                $.each(prog.dynamicAttributeBuffer.attributePointers, function (i, item) {
+                    trHTML += '<tr><td>' + item.name + '</td><td>' + item.location + '</td>'
+                    trHTML += '<td>' + item.count + '</td><td>' + item.type + "/0x" + item.type.toString(16) +
+                    "/" + WEBGL_TYPE[item.type] +
+                    '</td>';
+                    trHTML += '<td>' + item.normalize + '</td><td>' + item.stride + '</td>';
+                    trHTML += '<td>' + item.offset + '</td></tr>';
+                });
+                $('#tbl_att_ptr').append(trHTML);
+
             });
 
 	        ctx = new  WHContext($("#wh-canvas")[0]);
@@ -61,8 +75,17 @@
     <body>
         <canvas width='1' height='1' id="wh-canvas"></canvas>
         Choose shader-program: <select id = 'select-shaders'></select>
+        <br>
+        Attributes/Uniforms
         <table id='tbl_att'>
             <tr><td>index</td><td>name</td><td>type</td><td>size</td><td>typename</td></tr>
+        </table>
+
+        <br><br>
+        Vertex Attribute buffer
+        <table id='tbl_att_ptr'>
+            <tr><td>attribute</td><td>location</td><td>#components</td><td>datatype</td>
+                <td>normalize</td><td>stride</td><td>offset</td></tr>
         </table>
     </body>
 </html>

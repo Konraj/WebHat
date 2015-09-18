@@ -4,13 +4,10 @@
  **/
 var WHGLProgram = function(webhatCtx, vertexShader, fragmentShader ) {
     this.webhatCtx = webhatCtx;
-    console.log(vertexShader + " : " + fragmentShader);
     this.program = initShaders( webhatCtx.GL, vertexShader, fragmentShader );
     webhatCtx.GL.useProgram( this.program );
 
     this.Reflect();
-
-
 };
 
 /**
@@ -18,4 +15,9 @@ var WHGLProgram = function(webhatCtx, vertexShader, fragmentShader ) {
  **/
 WHGLProgram.prototype.Reflect = function() {
     this.propertyList = new WHShaderPropertyList(this.webhatCtx,this.program);
+    this.dynamicAttributeBuffer = new WHDynamicAttributeBuffer(this);
 };
+
+WHGLProgram.prototype.gl = function() {
+    return this.webhatCtx.GL;
+}
