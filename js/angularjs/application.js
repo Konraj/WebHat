@@ -10,11 +10,9 @@
 	angular.module('webhat').run(function($rootScope){
 		
 		// Real WebHat Context
-		$rootScope.WebHat = new WHContext($( "#wh-canvas" ));
+		$rootScope.WebHat = new WHContext($("#wh-canvas")[0]);
 		// The Angular look-alike
 		$rootScope.whng = {};
-		
-		
-		$rootScope.ng_template_west = "ng-template-camera-model";
+
 	});
 })();

@@ -1,0 +1,15 @@
+{
+  "shaders": [
+    {
+      "name" : "default",
+      "vertex-url":"/stores/shaders/vs-default.glsl",
+      "fragment-url":"/stores/shaders/fs-default.glsl"
+    },
+    {
+      "name" : "webgl-assignment-5",
+      "vertex-url":"/stores/shaders/vs-assingment5.glsl",
+      "fragment-url":"/stores/shaders/fs-assingment5.glsl"
+    }
+  ],
+  "version": 1.0
+}

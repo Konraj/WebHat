@@ -10,8 +10,8 @@ var WHCameraModel = function() {
 	this.at = vec3(0.0, 0.0, 0.0);
 	this.up = vec3(0.0, 1.0, 0.0);
 	this.eye = vec3(0,0,1);
-	
-	this.RecalculateSpherical();
+
+    this.RecalculateSpherical();
 		
 	// Lens 
 	this.fovy = 45.0;  	// Field-of-view in Y direction angle (in degrees)
@@ -37,7 +37,7 @@ WHCameraModel.prototype.projectionMatrix = function () {
 };
 
 /**
- * Set's the camera in terms of cartesian coordiantes
+ * Set's the camera in terms of cartesian coordinates
  **/
 WHCameraModel.prototype.CartesianPosition = function(x,y,z) {
 	this.eye = vec3(x,y,z);
@@ -49,14 +49,13 @@ WHCameraModel.prototype.CartesianPosition = function(x,y,z) {
  * Recalculate the Spherical coordinates
  **/
  WHCameraModel.prototype.RecalculateSpherical = function() {
-	
 	this.radius = Math.sqrt(dot(this.eye,this.eye));
     this.theta = Math.acos(this.eye[1]/this.radius);
 	this.phi = Math.atan2(this.eye[0],this.eye[2]);
 };
 
 /**
- * Set's the camera in terms of spherical coordiantes
+ * Set's the camera in terms of spherical coordinates
  **/
 WHCameraModel.prototype.SphericalPosition = function (phi, theta, radius) {
 	this.radius = radius

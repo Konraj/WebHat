@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Testing the GL-Program</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <script type="text/javascript" src="../js/edangel/webgl-utils.js"></script>
+    <script type="text/javascript" src="../js/edangel/initShaders2.js"></script>
+    <script type="text/javascript" src="../js/edangel/MV.js"></script>
+
+    <script src="../js/webhat/wh-shader-properties.js"></script>
+    <script src="../js/webhat/providers/shaders/wh-shader-provider.js"></script>
+    <script src="../js/webhat/wh-camera-model.js"></script>
+    <script src="../js/webhat/wh-gl-program.js"></script>
+    <script src="../js/webhat/wh-context.js"></script>
+    <script>
+        var shaders;
+        var ctx;
+        $(document).ready(function () {
+
+            $("#select-shaders").change(function(evt) {
+                var shdr = shaders[evt.target.value];
+
+                var prog = new WHGLProgram(ctx,shdr['vertex-url'], shdr['fragment-url']);
+
+
+               $("#tbl_att").find("tr:gt(0)").remove();
+               var trHTML = '<tr><td>uniforms</td></tr>';
+               $.each(prog.propertyList.uniforms, function (i, item) {
+                    trHTML += '<tr><td>' + item.index + '</td><td>' + item.name + '</td>'
+                    trHTML += '<td>' + item.type + '</td><td>' + item.size + '</td>';
+                    trHTML += '<td>' + item.typename+ '</td></tr>';
+                });
+                $('#tbl_att').append(trHTML);
+
+                var trHTML = '<tr><td>attributes</td></tr>';
+                $.each(prog.propertyList.attributes, function (i, item) {
+                    trHTML += '<tr><td>' + item.index + '</td><td>' + item.name + '</td>'
+                    trHTML += '<td>' + item.type + '</td><td>' + item.size + '</td>';
+                    trHTML += '<td>' + item.typename+ '</td></tr>';
+                });
+                $('#tbl_att').append(trHTML);
+
+            });
+
+	        ctx = new  WHContext($("#wh-canvas")[0]);
+	        ctx.shaderProviderFactory.webhatProvider().get(function(data) {
+                shaders = data.shaders;
+                var options = $("#select-shaders");
+                $.each(data.shaders, function(idx) {
+                    options.append($("<option />").val(idx).text(data.shaders[idx]["name"]));
+                });
+	        });
+
+
+        });
+    </script>
+    </head>
+    <body>
+        <canvas width='1' height='1' id="wh-canvas"></canvas>
+        Choose shader-program: <select id = 'select-shaders'></select>
+        <table id='tbl_att'>
+            <tr><td>index</td><td>name</td><td>type</td><td>size</td><td>typename</td></tr>
+        </table>
+    </body>
+</html>
