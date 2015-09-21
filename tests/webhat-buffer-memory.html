@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Testing the GL-Program</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <script type="text/javascript" src="../js/edangel/webgl-utils.js"></script>
+    <script type="text/javascript" src="../js/edangel/initShaders2.js"></script>
+    <script type="text/javascript" src="../js/edangel/MV.js"></script>
+
+    <script src="../js/webhat/buffers/linked-list-memory.js"></script>
+    <script src="../js/webhat/buffers/wh-attribute-buffer.js"></script>
+    <script src="../js/webhat/datatypes/webgl-types.js"></script>
+    <script src="../js/webhat/wh-shader-properties.js"></script>
+    <script src="../js/webhat/buffers/wh-dynamic-attribute-buffer.js"></script>
+    <script src="../js/webhat/providers/shaders/wh-shader-provider.js"></script>
+    <script src="../js/webhat/wh-camera-model.js"></script>
+    <script src="../js/webhat/wh-gl-program.js"></script>
+    <script src="../js/webhat/wh-context.js"></script>
+    <script>
+        var ctx;
+        var buffer;
+        var refList = [];
+
+
+        function free(index){
+            buffer.memory.free(refList[index]);
+            drawBuffer();
+        }
+
+        function allocate() {
+            var value = $("#allocateVal").val();
+            buffer.memory.allocate(parseInt(value));
+            drawBuffer();
+        }
+
+        function drawBuffer() {
+            $("#tbl_memory").find("tr:gt(0)").remove();
+            var trHTML = '';
+
+            var node = buffer.memory.root;
+            while(node != null) {
+                  trHTML += '<tr><td>' + node.data + '</td><td>' + node.offset + '</td>';
+
+                  if (node.free)
+                        trHTML += '<td>' + (node.next.offset - node.offset) + '</td>';
+                  else
+                        trHTML += '<td>--</td>';
+
+                  if (node.free || node.data == 'Root' || node.data == 'Tail'){
+                    trHTML += '<td></td>';
+                  }
+                  else
+                  {
+                    trHTML += '<td><button onclick="free('  + refList.length + ')">#</button></td>';
+                  }
+                  trHTML+= '</tr>';
+
+                refList.push(node);
+                node = node.next;
+            }
+
+            $('#tbl_memory').append(trHTML);
+        }
+
+        $(document).ready(function () {
+	        ctx = new  WHContext($("#wh-canvas")[0]);
+	        buffer = new WHAttributeBuffer(ctx.GL,100);
+	        drawBuffer();
+        });
+    </script>
+</head>
+<body>
+<canvas width='1' height='1' id="wh-canvas"></canvas>
+<button onclick='allocate()'>allocate</button><input id='allocateVal' type = 'text' value='11'>
+<table id='tbl_memory'>
+    <tdtr><td>data</td><td>offset</td><td>free</td><td>delete</td></tr>
+</table>
+</body>
+</html>
