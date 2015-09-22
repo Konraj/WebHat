@@ -16,6 +16,16 @@ var WHAttributeBufferToken = function(offset, length, token){
     this.token = token;
 };
 
+
+/**
+ * WHAttributeBuffer encapsulates both the
+ * ARRAY_BUFFER and a memory layout. This layout
+ * is used to order and store objects stored in this ARRAY_BUFFER.
+ * @constructor
+ * @this WHAttributeBuffer
+ * @param{gl} gl context.
+ * @param{size} The initial size in bytes.
+ **/
 var WHAttributeBuffer = function(gl,size){
     this.gl = gl;
     this.memory = new LLMemory(size); // memory layout model
@@ -25,19 +35,31 @@ var WHAttributeBuffer = function(gl,size){
     this.gl.bufferData( this.gl.ARRAY_BUFFER, this.size, this.gl.STATIC_DRAW );
 };
 
+/**
+ * allocate
+ * Tries to allocate a number of bytes from the internal
+ * memoy layout.
+ **/
 WHAttributeBuffer.prototype.allocate = function(numBytes) {
     var memNode = this.memory.findFirst(numBytes);
-    console.log("WHAttributeBuffer: " + memNode);
     if (memNode == null) {
         // TODO: Read how to copy buffers
     }else {
 
         return new WHAttributeBufferToken(
-            memNode.offset,
-            memNode.next.offset - memNode.offset,
-            memNode
-            );
+                    memNode.offset,
+                    memNode.next.offset - memNode.offset,
+                    memNode
+                   );
     }
 };
 
-
+/**
+ * free
+ * frees the memory associated with this wttributeBufferToken
+ * @this WHAttributeBuffer
+ * @param{token} WHAttributeBufferToken
+ **/
+WHAttributeBuffer.prototype.free = function(token){
+    this.memory.free(attributeBuffer.memNode);
+}

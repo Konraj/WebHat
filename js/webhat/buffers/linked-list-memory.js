@@ -38,14 +38,7 @@ var LLMemory = function(size){
  * Increase the amount of memory
  **/
 LLMemory.prototype.increase = function(increaseSize) {
-    if(this.tail.free){
         this.tail.offset += increaseSize;
-    }else {
-        this.tail.next = new LLMemoryNode(this.tail.size + increaseSize,false);
-        this.tail.next.prev = this.tail;
-        this.free = true;
-        this.tail = this.tail.next;
-    }
 };
 
 /**
